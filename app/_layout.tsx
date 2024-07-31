@@ -19,6 +19,7 @@ import { useAppDispatch } from "@/redux/store";
 import { getAllCoin } from "@/redux/reducers/coinReducer";
 import { CCWSURL } from "@/constants/String";
 import { WebSocketProvider } from "@/provider/SocketProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -59,10 +60,12 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <WebSocketProvider>
         <ReduxWrapper>
-          <Stack>
-            <Stack.Screen name="(main)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="(main)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </GestureHandlerRootView>
         </ReduxWrapper>
       </WebSocketProvider>
     </ThemeProvider>

@@ -4,6 +4,7 @@ const cgUrl = "https://api.coingecko.com/api/v3";
 const marketUrl = cgUrl + "/coins/market";
 const coinList = cgUrl + "/coins/markets";
 const coinById = cgUrl + "/coins/:coinId";
+const coinMarketChartUrl = cgUrl + "/coins/:coinId/:chartMode";
 const searchUrl = cgUrl + "/search";
 
 /**
@@ -38,6 +39,14 @@ const EndpointPool = [
   {
     endpoint: "SEARCH_BY_STRING",
     url: searchUrl,
+    method: "get",
+    header: {
+      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+    },
+  },
+  {
+    endpoint: "COIN_MARKET_CHART",
+    url: coinMarketChartUrl,
     method: "get",
     header: {
       "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
