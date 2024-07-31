@@ -15,6 +15,10 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ReduxWrapper from "@/redux/utilities/ReduxWrapper";
+import { useAppDispatch } from "@/redux/store";
+import { getAllCoin } from "@/redux/reducers/coinReducer";
+import { CCWSURL } from "@/constants/String";
+import { WebSocketProvider } from "@/provider/SocketProvider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,18 +49,22 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {}, []);
+
   if (!loaded) {
     return null;
   }
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <ReduxWrapper>
-        <Stack>
-          <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </ReduxWrapper>
+      <WebSocketProvider>
+        <ReduxWrapper>
+          <Stack>
+            <Stack.Screen name="(main)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </ReduxWrapper>
+      </WebSocketProvider>
     </ThemeProvider>
   );
 }

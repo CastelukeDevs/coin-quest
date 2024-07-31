@@ -27,4 +27,14 @@ export default StyleSheet.create({
     fontSize: Dimens.font_title_sub,
     color: ColorScale.gray[400],
   },
+  text_title: {
+    fontFamily: "SemiBold",
+    fontSize: Dimens.font_title,
+    color: ColorScale.gray[900],
+  },
+  text_title_sub: {
+    fontFamily: "SemiBold",
+    fontSize: Dimens.font_title_sub,
+    color: ColorScale.gray[400],
+  },
 });
