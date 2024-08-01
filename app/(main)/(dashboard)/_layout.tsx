@@ -2,39 +2,50 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { ColorScale } from "@/constants/Colors";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: ColorScale.gray[800],
+        tabBarInactiveTintColor: ColorScale.gray[400],
         headerShown: false,
+        tabBarShowLabel: false,
+        tabBarIconStyle: {
+          justifyContent: "center",
+          marginTop: 14,
+        },
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="HomeScreen"
         options={{
-          title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
+            <TabBarIcon name={"home-outline"} color={color} focused={focused} />
           ),
         }}
       />
       <Tabs.Screen
         name="RankingScreen"
         options={{
-          title: "Ranking",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+              name={"rocket-outline"}
               color={color}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ProfileScreen"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={"id-card-outline"}
+              color={color}
+              focused={focused}
             />
           ),
         }}

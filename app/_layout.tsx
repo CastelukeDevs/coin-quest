@@ -20,6 +20,8 @@ import { getAllCoin } from "@/redux/reducers/coinReducer";
 import { CCWSURL } from "@/constants/String";
 import { WebSocketProvider } from "@/provider/SocketProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Toasts } from "@backpackapp-io/react-native-toast";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -57,17 +59,22 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <WebSocketProvider>
-        <ReduxWrapper>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen name="(main)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </GestureHandlerRootView>
-        </ReduxWrapper>
-      </WebSocketProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <WebSocketProvider>
+            <ReduxWrapper>
+              <Stack>
+                <Stack.Screen name="(main)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <Toasts />
+            </ReduxWrapper>
+          </WebSocketProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

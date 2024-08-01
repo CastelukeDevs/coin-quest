@@ -10,6 +10,9 @@ import coinServices from "@/services/coinServices";
 import { router } from "expo-router";
 import { LineChart } from "react-native-wagmi-charts";
 import currencyFormatter from "@/utilities/currencyFormatter";
+import { useSelector } from "react-redux";
+import { selectSignInStatus } from "@/redux/reducers/defaultReducer";
+import { toast } from "@backpackapp-io/react-native-toast";
 
 const CoinImage = ({ uri }: { uri?: string }) => {
   return (
@@ -28,9 +31,7 @@ export type ICoinCardProps = {
   disableChart?: boolean;
 };
 const CoinCard = (props: ICoinCardProps) => {
-  // const url = CCURL + props.item.ImageUrl;
-  // const lastItemSymbol = useRef(props.item.symbol);
-  const { subscribe, unSubscribe } = useWebSocket();
+  const isSignedIn = useSelector(selectSignInStatus);
 
   const [cardItem, setCardItem] = useState<ICoinMarket | undefined>(
     typeof props.item === "string" ? undefined : props.item
@@ -52,13 +53,16 @@ const CoinCard = (props: ICoinCardProps) => {
 
   const onItemPressHandler = () => {
     if (props.onPress) {
-      props.onPress(cardItem!);
-    } else {
-      router.navigate({
-        pathname: "/(main)/DetailsScreen",
-        params: { id: cardItem?.id },
-      });
+      return props.onPress(cardItem!);
     }
+
+    if (!isSignedIn)
+      return toast.error("Please Sign in to open details", { id: "401" });
+
+    router.navigate({
+      pathname: "/(main)/DetailsScreen",
+      params: { id: cardItem?.id },
+    });
   };
 
   useEffect(() => {
@@ -122,7 +126,7 @@ const CoinCard = (props: ICoinCardProps) => {
       {market && (
         <View>
           <LineChart.Provider data={marketData!}>
-            <LineChart height={60} width={80}>
+            <LineChart height={50} width={80}>
               <LineChart.Path
                 color={
                   price.isMin ? ColorScale.red[400] : ColorScale.green[400]

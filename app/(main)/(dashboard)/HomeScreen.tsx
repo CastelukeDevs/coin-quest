@@ -1,5 +1,6 @@
 import {
   Animated,
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -28,43 +29,20 @@ import {
 import { FlashList } from "@shopify/flash-list";
 import { useAppDispatch } from "@/redux/store";
 import coinServices from "@/services/coinServices";
+import {
+  selectSignInStatus,
+  signInUser,
+} from "@/redux/reducers/defaultReducer";
 
-const mock = {
-  ath: 3.09,
-  ath_change_percentage: -87.59477,
-  ath_date: "2021-09-02T06:00:10.474Z",
-  atl: 0.019253,
-  atl_change_percentage: 1889.00629,
-  atl_date: "2020-03-13T02:22:55.044Z",
-  circulating_supply: 35585104432.6065,
-  current_price: 0.383082,
-  fully_diluted_valuation: 17238695011,
-  high_24h: 0.406427,
-  id: "cardano",
-  image:
-    "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
-  last_updated: "2024-08-01T05:26:46.029Z",
-  low_24h: 0.379296,
-  market_cap: 13632016939,
-  market_cap_change_24h: -606010614.720003,
-  market_cap_change_percentage_24h: -4.25628,
-  market_cap_rank: 11,
-  max_supply: 45000000000,
-  name: "Cardano",
-  price_change_24h: -0.01754,
-  price_change_percentage_24h: -4.37821,
-  roi: null,
-  symbol: "ada",
-  total_supply: 45000000000,
-  total_volume: 329731439,
-};
-
-const index = () => {
+const { width } = Dimensions.get("window");
+const HomeScreen = () => {
   const { top } = useSafeAreaInsets();
   const watchlist = useSelector(selectCoinWatchList);
+  const signedIn = useSelector(selectSignInStatus);
   const dispatch = useAppDispatch();
 
-  const [trendingCoinsID, setTrendingCoinsID] = useState<string[]>([]);
+  const [trendingCoinsID, setTrendingCoinsID] = useState<ICoinMarket[]>([]);
+  const [watchlistedCoin, setWatchlistedCoin] = useState<ICoinMarket[]>([]);
 
   const removeWatchlistHandler = (coinId: string) => {
     dispatch(removeCoinFromWatchList({ coinId }));
@@ -73,27 +51,68 @@ const index = () => {
     dispatch(addCoinToWatchList({ coinId }));
   };
 
+  const getTrendingCoins = async () => {
+    try {
+      const list = await coinServices.getTrendingCoins();
+      console.log("current Trending coins", list);
+
+      await coinServices
+        .getCoinsMarket(1, list.join(","))
+        .then((res) => setTrendingCoinsID(res.coins));
+    } catch (error) {
+      console.log("error while getting trending coins");
+    }
+  };
+
   useEffect(() => {
-    coinServices.getTrendingCoins().then(setTrendingCoinsID);
+    if (watchlist.length >= 1) {
+      coinServices
+        .getCoinsMarket(1, watchlist.join(","))
+        .then((res) => setWatchlistedCoin(res.coins));
+    }
+
+    return () => {};
+  }, [watchlist]);
+
+  useEffect(() => {
+    getTrendingCoins();
   }, []);
 
-  const signedIn = false;
-
   return (
-    <View style={{ paddingTop: top + Dimens.large, flex: 1 }}>
-      <View style={{ paddingHorizontal: Dimens.large }}>
+    <View
+      style={{
+        //paddingTop: top + Dimens.large
+        flex: 1,
+      }}
+    >
+      <View
+        style={{
+          paddingHorizontal: Dimens.large,
+          paddingTop: top + Dimens.large,
+          paddingBottom: Dimens.medium,
+          backgroundColor: ColorStandard.white,
+          ...GlobalStyles.shadow,
+          shadowColor: "black",
+        }}
+      >
         <Branding />
       </View>
-      <ScrollView style={{ flex: 1, marginTop: Dimens.medium }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          // paddingTop: 120,
+          paddingBottom: Dimens.large,
+        }}
+      >
         {signedIn && (
           <View>
             <Text style={styles.sectionHeaderText}>Your Watchlist</Text>
             <View style={{ gap: Dimens.small, marginHorizontal: Dimens.large }}>
-              {watchlist.length >= 1 ? (
-                watchlist.map((item) => {
+              {watchlistedCoin.length >= 1 ? (
+                watchlistedCoin.map((item) => {
                   return (
                     <CoinSwipeableCard
-                      key={item}
+                      key={item.id}
                       item={item}
                       onRemoveWatchList={removeWatchlistHandler}
                     />
@@ -116,10 +135,11 @@ const index = () => {
               trendingCoinsID.map((item) => {
                 return (
                   <CoinSwipeableCard
-                    key={item}
+                    key={item.id}
                     item={item}
                     onRemoveWatchList={removeWatchlistHandler}
                     onAddWatchList={addWatchlistHandler}
+                    disableChart
                   />
                 );
               })
@@ -133,21 +153,18 @@ const index = () => {
           </View>
         </View>
       </ScrollView>
-      {/* <View style={{ height: 100, padding: Dimens.large }}>
-        <Buttons label="Sign In" />
-        <Text style={[GlobalStyles.text_content_sub, styles.footerText]}>
-          Sign in to gain access into details, ranking and bookmarks.
-        </Text>
-      </View> */}
       {!signedIn && <SignInPrompt />}
     </View>
   );
 };
 
-export default index;
+export default HomeScreen;
 
 const SignInPrompt = () => {
-  const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch();
+  const signInHandler = () => {
+    dispatch(signInUser());
+  };
   return (
     <View
       style={{
@@ -166,9 +183,10 @@ const SignInPrompt = () => {
       <Buttons
         label="Sign In with Google"
         iconComponent={(props) => <Ionicons name="logo-google" {...props} />}
+        onPress={signInHandler}
       />
       <Text style={[GlobalStyles.text_content_sub, styles.footerText]}>
-        Sign in to gain access into details, ranking and bookmarks.
+        Sign in to gain access into details and bookmarks.
       </Text>
     </View>
   );

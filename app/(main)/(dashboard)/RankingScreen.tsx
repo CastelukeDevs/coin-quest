@@ -56,8 +56,6 @@ const RankingScreen = () => {
     getCoinList(1);
   }, []);
 
-  console.log("watchlist", watchlist);
-
   return (
     <View style={{ paddingTop: top, flex: 1 }}>
       {/* <View style={{ borderWidth: 1 }}>

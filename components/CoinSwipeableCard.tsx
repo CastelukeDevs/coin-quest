@@ -7,6 +7,10 @@ import { useMemo, useRef } from "react";
 import { Swipeable } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { selectCoinWatchList } from "@/redux/reducers/coinReducer";
+import {
+  selectSignInStatus,
+  signInUser,
+} from "@/redux/reducers/defaultReducer";
 
 type ISwipeButtonProps = {
   isDelete?: boolean;
@@ -40,15 +44,14 @@ const SwipeButton = ({ isDelete, onPress }: ISwipeButtonProps) => {
 type ICoinSwipeAbleCardProps = {
   onAddWatchList?: (v: string) => void;
   onRemoveWatchList?: (v: string) => void;
-  //   mode?: "add" | "remove" | "none";
 } & ICoinCardProps;
 const CoinSwipeableCard = ({
   onAddWatchList,
   onRemoveWatchList,
-  //   mode = "none",
   ...props
 }: ICoinSwipeAbleCardProps) => {
   const watchlist = useSelector(selectCoinWatchList);
+  const isSignedIn = useSelector(selectSignInStatus);
   const ref = useRef<Swipeable>(null);
 
   const coinId = typeof props.item === "string" ? props.item : props.item.id;
@@ -62,10 +65,10 @@ const CoinSwipeableCard = ({
     ref.current?.close();
   };
 
-  const currentMode = useMemo(
-    () => (watchlist.includes(coinId) ? "remove" : "add"),
-    [props, watchlist]
-  );
+  const currentMode = useMemo(() => {
+    if (!isSignedIn) return "none";
+    return watchlist.includes(coinId) ? "remove" : "add";
+  }, [props, watchlist, isSignedIn]);
 
   return (
     <Swipeable
@@ -75,13 +78,19 @@ const CoinSwipeableCard = ({
         currentMode === "add" && { backgroundColor: ColorScale.brand[200] },
         // currentMode === "none" && { backgroundColor: ColorStandard.white },
       ]}
-      renderRightActions={() =>
-        currentMode === "add" ? (
-          <SwipeButton onPress={onAddPressHandler} />
-        ) : (
-          <SwipeButton onPress={onRemovePressHandler} isDelete />
-        )
-      }
+      renderRightActions={() => {
+        return (
+          <>
+            {currentMode === "add" && (
+              <SwipeButton onPress={onAddPressHandler} />
+            )}
+            {currentMode === "remove" && (
+              <SwipeButton onPress={onRemovePressHandler} isDelete />
+            )}
+            {currentMode === "none" && null}
+          </>
+        );
+      }}
     >
       <CoinCard {...props} disableOpacity />
     </Swipeable>
