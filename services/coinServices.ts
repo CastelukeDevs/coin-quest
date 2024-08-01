@@ -50,7 +50,7 @@ const getTrendingCoins = async () => {
     return remapped;
   });
 
-  return apiCall;
+  return await getCoinsMarket(1, apiCall.join(",")).then((res) => res.coins);
 };
 
 export default {

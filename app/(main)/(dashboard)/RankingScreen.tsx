@@ -78,7 +78,7 @@ const RankingScreen = () => {
         }}
         estimatedItemSize={80}
         onEndReached={onEndOfListHandler}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.8}
       />
     </View>
   );

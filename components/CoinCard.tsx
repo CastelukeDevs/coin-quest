@@ -59,7 +59,7 @@ const CoinCard = (props: ICoinCardProps) => {
     if (!isSignedIn)
       return toast.error("Please Sign in to open details", { id: "401" });
 
-    router.navigate({
+    router.push({
       pathname: "/(main)/DetailsScreen",
       params: { id: cardItem?.id },
     });

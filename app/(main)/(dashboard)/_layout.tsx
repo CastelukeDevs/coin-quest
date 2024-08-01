@@ -14,8 +14,11 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarIconStyle: {
           justifyContent: "center",
-          marginTop: 14,
+          marginTop: 24,
+          marginBottom: 20,
+          height: 60,
         },
+        tabBarStyle: { paddingVertical: 10, paddingBottom: 20, height: 70 },
       }}
     >
       <Tabs.Screen

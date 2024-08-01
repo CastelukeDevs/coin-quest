@@ -51,19 +51,6 @@ const HomeScreen = () => {
     dispatch(addCoinToWatchList({ coinId }));
   };
 
-  const getTrendingCoins = async () => {
-    try {
-      const list = await coinServices.getTrendingCoins();
-      console.log("current Trending coins", list);
-
-      await coinServices
-        .getCoinsMarket(1, list.join(","))
-        .then((res) => setTrendingCoinsID(res.coins));
-    } catch (error) {
-      console.log("error while getting trending coins");
-    }
-  };
-
   useEffect(() => {
     if (watchlist.length >= 1) {
       coinServices
@@ -75,7 +62,7 @@ const HomeScreen = () => {
   }, [watchlist]);
 
   useEffect(() => {
-    getTrendingCoins();
+    coinServices.getTrendingCoins().then(setTrendingCoinsID);
   }, []);
 
   return (
@@ -104,11 +91,11 @@ const HomeScreen = () => {
           paddingBottom: Dimens.large,
         }}
       >
-        {signedIn && (
+        {signedIn && watchlistedCoin.length >= 1 && (
           <View>
             <Text style={styles.sectionHeaderText}>Your Watchlist</Text>
             <View style={{ gap: Dimens.small, marginHorizontal: Dimens.large }}>
-              {watchlistedCoin.length >= 1 ? (
+              {watchlistedCoin.length >= 1 &&
                 watchlistedCoin.map((item) => {
                   return (
                     <CoinSwipeableCard
@@ -117,14 +104,7 @@ const HomeScreen = () => {
                       onRemoveWatchList={removeWatchlistHandler}
                     />
                   );
-                })
-              ) : (
-                <View style={{ padding: 60 }}>
-                  <Text style={GlobalStyles.text_title_sub}>
-                    Watchlist empty
-                  </Text>
-                </View>
-              )}
+                })}
             </View>
           </View>
         )}

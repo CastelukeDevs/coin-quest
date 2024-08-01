@@ -1,13 +1,15 @@
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ICoinMarket } from "@/types/CoinTypes";
+import { ICoinMarket, IMarketData } from "@/types/CoinTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import coinServices from "@/services/coinServices";
 import {
@@ -16,7 +18,7 @@ import {
   TData,
   useCandleData,
 } from "react-native-wagmi-charts";
-import { ColorScale } from "@/constants/Colors";
+import { ColorScale, ColorStandard } from "@/constants/Colors";
 import currencyFormatter, {
   currencyFormatterWorklet,
 } from "@/utilities/currencyFormatter";
@@ -29,6 +31,16 @@ import ScreenHeader from "@/components/ScreenHeader";
 import GlobalStyles from "@/constants/GlobalStyles";
 import Dimens from "@/constants/Dimens";
 import OrderBook from "@/components/OrderBook";
+import PageSelector, { ISelectorItem } from "@/components/PageSelector";
+import CoinKeyInfo from "@/components/CoinKeyInfo";
+
+const detailPageItem = [
+  { label: "Order Book", value: "order_book" },
+  { label: "Information", value: "information" },
+  { label: "Recommendation", value: "recommendation" },
+] as const satisfies ISelectorItem[];
+
+type IExtendedPage = (typeof detailPageItem)[number]["value"];
 
 const DetailsScreen = () => {
   const { bottom } = useSafeAreaInsets();
@@ -37,6 +49,9 @@ const DetailsScreen = () => {
   const [Coin, setCoin] = useState<ICoinMarket | undefined>();
   const [OHLCData, setOHLCData] = useState<number[][]>([]);
   const [duration, setDuration] = useState(1);
+  const [extendedPage, setExtendedPage] = useState<IExtendedPage>(
+    detailPageItem[0].value
+  );
 
   const candleChartData = useMemo(
     () =>
@@ -80,22 +95,38 @@ const DetailsScreen = () => {
         <View
           style={{
             paddingHorizontal: Dimens.large,
-            marginTop: Dimens.xLarge,
+            paddingTop: Dimens.xLarge,
             gap: Dimens.large,
+            backgroundColor: ColorStandard.white,
           }}
         >
-          {/* <Text style={GlobalStyles.text_section_header}>Order Book</Text> */}
-          <View
-            style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}
-          >
-            <Text style={GlobalStyles.text_title}>Order Book</Text>
-            <Text style={GlobalStyles.text_title_sub}>Information</Text>
-            <Text style={GlobalStyles.text_title_sub}>Recommendation</Text>
-          </View>
-          <OrderBook symbol={Coin?.symbol} />
+          <PageSelector
+            data={detailPageItem}
+            value={extendedPage}
+            onChangeSelected={setExtendedPage}
+          />
+          {extendedPage === "order_book" && <OrderBook symbol={Coin?.symbol} />}
+          {extendedPage === "information" && <CoinKeyInfo coin={Coin} />}
+          {extendedPage === "recommendation" && <CoinRecommendation />}
         </View>
       </ScrollView>
     </>
+  );
+};
+
+const CoinRecommendation = () => {
+  const [recomendationList, setRecomendationList] = useState<ICoinMarket[]>([]);
+
+  useEffect(() => {
+    coinServices.getTrendingCoins().then(setRecomendationList);
+  }, []);
+
+  return (
+    <View style={{ gap: 8, backgroundColor: ColorStandard.white }}>
+      {recomendationList.map((item) => {
+        return <CoinCard item={item} key={item.id} disableChart />;
+      })}
+    </View>
   );
 };
 
