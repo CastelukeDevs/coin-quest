@@ -46,5 +46,8 @@ export default {
         projectId: "c12540eb-aa6d-4a53-b4e6-b64b3c80f6fc",
       },
     },
+    updates: {
+      url: "https://u.expo.dev/c12540eb-aa6d-4a53-b4e6-b64b3c80f6fc",
+    },
   },
 };
