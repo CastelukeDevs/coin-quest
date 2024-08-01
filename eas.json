@@ -1,0 +1,38 @@
+{
+  "cli": {
+    "version": ">= 10.1.1"
+  },
+  "build": {
+    "iosbuildsetting": {
+      "ios": {
+        "image": "latest",
+        "resourceClass": "m-medium",
+        "cocoapods": "1.14.0"
+      }
+    },
+    "dev-client": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "PACKAGE_NAME": "com.casteluke.coinquest.devclient"
+      }
+    },
+    "development": {
+      "distribution": "internal",
+      "channel": "development",
+      "env": {
+        "PACKAGE_NAME": "com.casteluke.coinquest.dev"
+      }
+    },
+    "release": {
+      "extends": "iosbuildsetting",
+      "channel": "release",
+      "env": {
+        "PACKAGE_NAME": "com.casteluke.coinquest"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
