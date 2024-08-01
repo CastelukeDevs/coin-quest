@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 8,
     backgroundColor: ColorStandard.white,
-    marginVertical: 4,
-    marginHorizontal: 8,
+    // marginVertical: 4,
+    // marginHorizontal: 8,
   },
   imageContainer: {
     height: 54,

@@ -7,7 +7,10 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Dimens from "@/constants/Dimens";
 
-const ScreenHeader = () => {
+type IScreenHeaderProps = {
+  title?: string;
+};
+const ScreenHeader = (props: IScreenHeaderProps) => {
   const { top } = useSafeAreaInsets();
   const onBackPressHandler = () => {
     router.back();
@@ -19,7 +22,19 @@ const ScreenHeader = () => {
       <Buttons
         label="Back"
         onPress={onBackPressHandler}
-        styles={{ paddingVertical: 4, paddingHorizontal: 4 }}
+        styles={styles.buttonOverride}
+        mode="faded"
+      />
+
+      {props.title && <Text style={styles.titleText}>{props.title}</Text>}
+
+      <Buttons
+        label="Back"
+        styles={{ ...styles.buttonOverride, backgroundColor: "transparent" }}
+        labelStyles={{
+          color: "transparent",
+        }}
+        mode="faded"
       />
     </View>
   );
@@ -33,5 +48,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: Dimens.medium,
     shadowColor: ColorScale.gray[800],
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  buttonOverride: { paddingVertical: 4, paddingHorizontal: 8 },
+  titleText: {
+    ...GlobalStyles.text_title,
   },
 });

@@ -85,20 +85,33 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
   const subscribe = (target: string) => {
     const message = {
       type: "subscribe",
-      heartbeat: true,
-      subscribe_data_type: ["book"],
-      subscribe_filter_asset_id: [target],
+      heartbeat: false,
+      subscribe_data_type: ["book20"],
+      subscribe_filter_asset_id: [
+        // target,
+        // `COINBASE_SPOT_${target.toUpperCase()}_USD`,
+        `${target.toUpperCase()}/USD`,
+      ],
+      // subscribe_filter_asset_id: [target],
     };
+    console.log("subscribe", message);
+
     socket?.send(JSON.stringify(message));
   };
 
   const unSubscribe = (target: string) => {
     const message = {
       type: "unsubscribe",
-      heartbeat: true,
-      subscribe_data_type: ["book"],
-      subscribe_filter_asset_id: [target],
+      heartbeat: false,
+      subscribe_data_type: ["book20"],
+      // subscribe_filter_asset_id: [target],
+      subscribe_filter_asset_id: [
+        // target,
+        // `COINBASE_SPOT_${target.toUpperCase()}_USD`,
+        `${target.toUpperCase()}/USD`,
+      ],
     };
+    console.log("unsubscribe", message);
     socket?.send(JSON.stringify(message));
   };
 

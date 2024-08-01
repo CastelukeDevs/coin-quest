@@ -1,4 +1,10 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { ICoinMarket } from "@/types/CoinTypes";
@@ -20,13 +26,16 @@ import DurationSelector from "@/components/DurationSelector";
 import CoinCard from "@/components/CoinCard";
 import { useWebSocket } from "@/provider/SocketProvider";
 import ScreenHeader from "@/components/ScreenHeader";
+import GlobalStyles from "@/constants/GlobalStyles";
+import Dimens from "@/constants/Dimens";
+import OrderBook from "@/components/OrderBook";
 
 const DetailsScreen = () => {
-  const { top } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const { item } = useLocalSearchParams();
   const CoinData: ICoinMarket = JSON.parse(item as string);
 
-  const { subscribe, unSubscribe, socket } = useWebSocket();
+  console.log("Current Coin DATA", CoinData);
 
   const [OHLCData, setOHLCData] = useState<number[][]>([]);
   const [duration, setDuration] = useState(1);
@@ -53,32 +62,31 @@ const DetailsScreen = () => {
     return () => {};
   }, [duration]);
 
-  useEffect(() => {
-    if (socket !== null) {
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("Message received:", data, data.type);
-        // return data;
-      };
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    subscribe(CoinData.symbol);
-
-    return () => {
-      unSubscribe(CoinData.symbol);
-    };
-  }, []);
-
   return (
     <>
-      <ScreenHeader />
-      <View style={{ flex: 1 }}>
+      <ScreenHeader title={CoinData.name} />
+      <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}>
+        <Text style={GlobalStyles.text_title}>Market</Text>
+        <Text style={GlobalStyles.text_title_sub}>Information</Text>
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: bottom }}
+      >
+        {/* <CoinCard item={CoinData} /> */}
         <CandleSticks data={candleChartData} />
         <DurationSelector onChangeSelected={setDuration} />
-        <CoinCard item={CoinData} />
-      </View>
+        <View
+          style={{
+            paddingHorizontal: Dimens.large,
+            marginTop: Dimens.xLarge,
+            gap: Dimens.large,
+          }}
+        >
+          <Text style={GlobalStyles.text_section_header}>Order Book</Text>
+          <OrderBook symbol={CoinData.symbol} />
+        </View>
+      </ScrollView>
     </>
   );
 };

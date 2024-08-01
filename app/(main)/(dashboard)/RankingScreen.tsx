@@ -46,14 +46,18 @@ const RankingScreen = () => {
 
   return (
     <View style={{ paddingTop: top, flex: 1 }}>
-      <View style={{ borderWidth: 1 }}>
+      {/* <View style={{ borderWidth: 1 }}>
         <TextInput value={search} onChangeText={setSearch} />
-      </View>
+      </View> */}
       <FlashList
         data={search.length < 1 ? coins : searchedCoins}
         keyExtractor={(_, i) => i.toString()}
         renderItem={({ item }) => {
-          return <CoinCard item={item} onPress={onItemPressHandler} />;
+          return (
+            <View style={{ marginHorizontal: 24, marginBottom: 8 }}>
+              <CoinCard item={item} onPress={onItemPressHandler} />
+            </View>
+          );
         }}
         estimatedItemSize={80}
         onEndReached={onEndOfListHandler}
