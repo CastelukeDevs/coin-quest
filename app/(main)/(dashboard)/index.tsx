@@ -66,15 +66,21 @@ const index = () => {
 
   return (
     <View style={{ paddingTop: top + Dimens.large, flex: 1 }}>
-      <Branding />
+      <View style={{ paddingHorizontal: Dimens.large }}>
+        <Branding />
+      </View>
       <View style={{ flex: 1, marginTop: Dimens.medium }}>
-        <Text style={GlobalStyles.text_section_header}>Your Watchlist</Text>
+        <Text
+          style={[GlobalStyles.text_section_header, { margin: Dimens.large }]}
+        >
+          Your Watchlist
+        </Text>
         <FlashList
           data={watchlist}
           keyExtractor={(_, i) => i.toString()}
           renderItem={({ item }) => {
             return (
-              <View style={{ marginHorizontal: 24, marginBottom: 8 }}>
+              <View style={{ marginHorizontal: Dimens.large, marginBottom: 8 }}>
                 <CoinSwipeableCard
                   item={item}
                   // onPress={onItemPressHandler}
@@ -89,12 +95,12 @@ const index = () => {
           // onEndReachedThreshold={1}
         />
       </View>
-      <View style={{ height: 100 }}>
+      {/* <View style={{ height: 100, padding: Dimens.large }}>
         <Buttons label="Sign In" />
         <Text style={[GlobalStyles.text_content_sub, styles.footerText]}>
           Sign in to gain access into details, ranking and bookmarks.
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 };

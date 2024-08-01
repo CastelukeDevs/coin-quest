@@ -69,10 +69,7 @@ const DetailsScreen = () => {
   return (
     <>
       <ScreenHeader title={Coin?.name} />
-      <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}>
-        <Text style={GlobalStyles.text_title}>Market</Text>
-        <Text style={GlobalStyles.text_title_sub}>Information</Text>
-      </View>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: bottom }}
@@ -87,7 +84,14 @@ const DetailsScreen = () => {
             gap: Dimens.large,
           }}
         >
-          <Text style={GlobalStyles.text_section_header}>Order Book</Text>
+          {/* <Text style={GlobalStyles.text_section_header}>Order Book</Text> */}
+          <View
+            style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}
+          >
+            <Text style={GlobalStyles.text_title}>Order Book</Text>
+            <Text style={GlobalStyles.text_title_sub}>Information</Text>
+            <Text style={GlobalStyles.text_title_sub}>Recommendation</Text>
+          </View>
           <OrderBook symbol={Coin?.symbol} />
         </View>
       </ScrollView>

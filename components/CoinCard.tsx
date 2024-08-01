@@ -8,6 +8,8 @@ import { ICoin, ICoinDetail, ICoinMarket } from "@/types/CoinTypes";
 import { useWebSocket } from "@/provider/SocketProvider";
 import coinServices from "@/services/coinServices";
 import { router } from "expo-router";
+import { LineChart } from "react-native-wagmi-charts";
+import currencyFormatter from "@/utilities/currencyFormatter";
 
 const CoinImage = ({ uri }: { uri?: string }) => {
   return (
@@ -23,6 +25,7 @@ export type ICoinCardProps = {
   onPress?: (item: ICoinMarket) => void;
   disable?: boolean;
   disableOpacity?: boolean;
+  disableChart?: boolean;
 };
 const CoinCard = (props: ICoinCardProps) => {
   // const url = CCURL + props.item.ImageUrl;
@@ -32,14 +35,20 @@ const CoinCard = (props: ICoinCardProps) => {
   const [cardItem, setCardItem] = useState<ICoinMarket | undefined>(
     typeof props.item === "string" ? undefined : props.item
   );
+  const [market, setMarket] = useState<number[][] | undefined>();
+
+  const marketData = useMemo(
+    () => market?.map((data) => ({ timestamp: data[0], value: data[1] })),
+    [market]
+  );
 
   const price = useMemo(() => {
     return {
       currency: Math.abs(cardItem?.current_price ?? 0)?.toFixed(2),
       percent: Math.abs(cardItem?.price_change_percentage_24h ?? 0)?.toFixed(2),
-      isMin: cardItem?.price_change_24h ?? 0 < 0,
+      isMin: cardItem?.price_change_24h! < 0,
     };
-  }, [props.item]);
+  }, [cardItem]);
 
   const onItemPressHandler = () => {
     if (props.onPress) {
@@ -62,6 +71,17 @@ const CoinCard = (props: ICoinCardProps) => {
     }
   }, [props]);
 
+  useEffect(() => {
+    if (cardItem && !props.disableChart) {
+      coinServices
+        .getCoinChartData(cardItem.id, "market_chart", 1)
+        .then((res: any) => {
+          // console.log("res", res);
+          setMarket(res.prices);
+        });
+    }
+  }, [cardItem, props.disableChart]);
+
   return (
     <TouchableOpacity
       style={styles.componentBaseContainer}
@@ -72,25 +92,49 @@ const CoinCard = (props: ICoinCardProps) => {
       <CoinImage uri={cardItem?.image} />
 
       <View style={{ justifyContent: "center", gap: 4, flex: 1 }}>
-        <Text style={GlobalStyles.text_title} numberOfLines={1}>
+        <Text
+          style={[GlobalStyles.text_content, { fontFamily: "Bold" }]}
+          numberOfLines={2}
+        >
           {cardItem?.name}
         </Text>
-        <Text style={GlobalStyles.text_title_sub}>{cardItem?.symbol}</Text>
+        <Text style={GlobalStyles.text_content_sub}>{cardItem?.symbol}</Text>
       </View>
 
       <View
         style={{ justifyContent: "center", gap: 4, alignItems: "flex-end" }}
       >
-        <Text style={GlobalStyles.text_title}>USD {price.currency}</Text>
+        <Text style={GlobalStyles.text_title}>
+          {currencyFormatter(price.currency)}
+          {/* {price.currency} */}
+        </Text>
         <Text
           style={[
             GlobalStyles.text_title_sub,
-            price.isMin ? { color: "red" } : { color: "green" },
+            price.isMin
+              ? { color: ColorScale.red[400] }
+              : { color: ColorScale.green[400] },
           ]}
         >
           {price.percent}%
         </Text>
       </View>
+      {market && (
+        <View>
+          <LineChart.Provider data={marketData!}>
+            <LineChart height={60} width={80}>
+              <LineChart.Path
+                color={
+                  price.isMin ? ColorScale.red[400] : ColorScale.green[400]
+                }
+              >
+                <LineChart.HorizontalLine at={{ index: 0 }} />
+                <LineChart.Gradient />
+              </LineChart.Path>
+            </LineChart>
+          </LineChart.Provider>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

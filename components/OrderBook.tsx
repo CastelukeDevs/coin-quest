@@ -60,17 +60,23 @@ const OrderBook = (props: IOrderBookProps) => {
           askSize={"Size"}
           isBold
         />
-        {arr.map((v, i) => {
-          return (
-            <OrderBookItem
-              key={v}
-              bidSize={bookState.bids[i]?.size}
-              bidPrice={bookState.bids[i]?.price}
-              askPrice={bookState.asks[i]?.price}
-              askSize={bookState.asks[i]?.size}
-            />
-          );
-        })}
+        {bookState.bids[0] ? (
+          arr.map((v, i) => {
+            return (
+              <OrderBookItem
+                key={v}
+                bidSize={bookState.bids[i]?.size}
+                bidPrice={bookState.bids[i]?.price}
+                askPrice={bookState.asks[i]?.price}
+                askSize={bookState.asks[i]?.size}
+              />
+            );
+          })
+        ) : (
+          <View style={{ alignItems: "center", padding: 50 }}>
+            <Text style={GlobalStyles.text_title_sub}>Order Book Empty</Text>
+          </View>
+        )}
       </View>
     </View>
   );

@@ -16,6 +16,7 @@ import coinServices from "@/services/coinServices";
 import { router } from "expo-router";
 import CoinSwipeableCard from "@/components/CoinSwipeableCard";
 import { useAppDispatch } from "@/redux/store";
+import Dimens from "@/constants/Dimens";
 
 const RankingScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -67,11 +68,12 @@ const RankingScreen = () => {
         keyExtractor={(_, i) => i.toString()}
         renderItem={({ item }) => {
           return (
-            <View style={{ marginHorizontal: 24, marginBottom: 8 }}>
+            <View style={{ marginHorizontal: Dimens.large, marginBottom: 8 }}>
               <CoinSwipeableCard
                 item={item}
                 onAddWatchList={addWatchlistHandler}
                 onRemoveWatchList={removeWatchlistHandler}
+                disableChart
               />
             </View>
           );

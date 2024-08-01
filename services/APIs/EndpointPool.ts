@@ -6,6 +6,7 @@ const coinList = cgUrl + "/coins/markets";
 const coinById = cgUrl + "/coins/:coinId";
 const coinMarketChartUrl = cgUrl + "/coins/:coinId/:chartMode";
 const searchUrl = cgUrl + "/search";
+const trendingCoinUrl = cgUrl + "/search/trending";
 
 /**
  * This endpoint pool types accepts

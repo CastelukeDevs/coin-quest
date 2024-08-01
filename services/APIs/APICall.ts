@@ -101,7 +101,7 @@ const APICall = async <T, X = never>(
     params: options?.params ? options?.params : undefined,
     signal: options?.abortController?.signal,
     headers: {
-      ...headerAuthorization,
+      // ...headerAuthorization,
       ...headerContentType,
       ...options?.header,
       ...selectEndpoint.header,
@@ -121,21 +121,18 @@ const APICall = async <T, X = never>(
       return resultPayload;
     })
     .catch((error: AxiosError<IAPIError>) => {
-      const errorPayload = {
-        message:
-          error.response?.data?.message ||
-          error.response?.data?.error.message ||
-          error.response?.data?.error ||
-          error.message,
-        code: `${error.response?.status}`,
-        error: error.response,
-      };
-      console.log(
-        `=> [X] axios request ${selectEndpoint.endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`
-      );
       console.warn("=> [X] axios error:", error);
 
-      throw errorPayload;
+      // const errorPayload = {
+      //   message: error.message ?? "unknown error",
+      //   code: `${error.response?.status}`,
+      //   error: error.response,
+      // };
+      // console.log(
+      //   `=> [X] axios request ${selectEndpoint.endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`
+      // );
+
+      throw error;
     });
 };
 
