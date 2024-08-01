@@ -53,6 +53,14 @@ const EndpointPool = [
       "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
     },
   },
+  {
+    endpoint: "TRENDING_COIN",
+    url: trendingCoinUrl,
+    method: "get",
+    header: {
+      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+    },
+  },
 ] as const satisfies IEndpointPool[];
 
 export default EndpointPool;

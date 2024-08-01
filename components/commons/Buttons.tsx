@@ -5,10 +5,15 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import Dimens from "@/constants/Dimens";
 import { ColorScale, ColorStandard } from "@/constants/Colors";
 import GlobalStyles from "@/constants/GlobalStyles";
+
+type IIconPropsCompact = {
+  size: number;
+  color: string;
+};
 
 type IButtonMode = "contained" | "faded" | "outlined" | "faded-outlined";
 type IButtonProps = {
@@ -18,6 +23,7 @@ type IButtonProps = {
   mode?: IButtonMode;
   styles?: ViewStyle;
   labelStyles?: TextStyle;
+  iconComponent?: (iconProps: IIconPropsCompact) => ReactNode;
 };
 const Buttons = ({ mode = "contained", ...props }: IButtonProps) => {
   const onPressHandler = () => {
@@ -33,6 +39,8 @@ const Buttons = ({ mode = "contained", ...props }: IButtonProps) => {
       ]}
       onPress={onPressHandler}
     >
+      {props.iconComponent &&
+        props.iconComponent({ color: ColorScale.brand[900], size: 22 })}
       <Text style={[styles.LabelStyle, props.labelStyles]}>{props.label}</Text>
     </TouchableOpacity>
   );
@@ -66,6 +74,10 @@ const styles = StyleSheet.create({
     paddingVertical: Dimens.large,
     paddingHorizontal: Dimens.medium,
     borderRadius: Dimens.small,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: Dimens.small,
   },
   ButtonContained: {
     backgroundColor: ColorScale.brand[400],

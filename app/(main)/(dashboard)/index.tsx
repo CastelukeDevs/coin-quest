@@ -1,11 +1,13 @@
 import {
   Animated,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ColorScale, ColorStandard } from "@/constants/Colors";
 import Branding from "@/components/commons/Branding";
@@ -19,11 +21,13 @@ import { Ionicons } from "@expo/vector-icons";
 import CoinSwipeableCard from "@/components/CoinSwipeableCard";
 import { useSelector } from "react-redux";
 import {
+  addCoinToWatchList,
   removeCoinFromWatchList,
   selectCoinWatchList,
 } from "@/redux/reducers/coinReducer";
 import { FlashList } from "@shopify/flash-list";
 import { useAppDispatch } from "@/redux/store";
+import coinServices from "@/services/coinServices";
 
 const mock = {
   ath: 3.09,
@@ -60,52 +64,115 @@ const index = () => {
   const watchlist = useSelector(selectCoinWatchList);
   const dispatch = useAppDispatch();
 
+  const [trendingCoinsID, setTrendingCoinsID] = useState<string[]>([]);
+
   const removeWatchlistHandler = (coinId: string) => {
     dispatch(removeCoinFromWatchList({ coinId }));
   };
+  const addWatchlistHandler = (coinId: string) => {
+    dispatch(addCoinToWatchList({ coinId }));
+  };
+
+  useEffect(() => {
+    coinServices.getTrendingCoins().then(setTrendingCoinsID);
+  }, []);
+
+  const signedIn = false;
 
   return (
     <View style={{ paddingTop: top + Dimens.large, flex: 1 }}>
       <View style={{ paddingHorizontal: Dimens.large }}>
         <Branding />
       </View>
-      <View style={{ flex: 1, marginTop: Dimens.medium }}>
-        <Text
-          style={[GlobalStyles.text_section_header, { margin: Dimens.large }]}
-        >
-          Your Watchlist
-        </Text>
-        <FlashList
-          data={watchlist}
-          keyExtractor={(_, i) => i.toString()}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ marginHorizontal: Dimens.large, marginBottom: 8 }}>
-                <CoinSwipeableCard
-                  item={item}
-                  // onPress={onItemPressHandler}
-                  // onAddWatchList={addWatchlistHandler}
-                  onRemoveWatchList={removeWatchlistHandler}
-                />
+      <ScrollView style={{ flex: 1, marginTop: Dimens.medium }}>
+        {signedIn && (
+          <View>
+            <Text style={styles.sectionHeaderText}>Your Watchlist</Text>
+            <View style={{ gap: Dimens.small, marginHorizontal: Dimens.large }}>
+              {watchlist.length >= 1 ? (
+                watchlist.map((item) => {
+                  return (
+                    <CoinSwipeableCard
+                      key={item}
+                      item={item}
+                      onRemoveWatchList={removeWatchlistHandler}
+                    />
+                  );
+                })
+              ) : (
+                <View style={{ padding: 60 }}>
+                  <Text style={GlobalStyles.text_title_sub}>
+                    Watchlist empty
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+        <View>
+          <Text style={styles.sectionHeaderText}>Trending Coins</Text>
+          <View style={{ gap: Dimens.small, marginHorizontal: Dimens.large }}>
+            {trendingCoinsID.length >= 1 ? (
+              trendingCoinsID.map((item) => {
+                return (
+                  <CoinSwipeableCard
+                    key={item}
+                    item={item}
+                    onRemoveWatchList={removeWatchlistHandler}
+                    onAddWatchList={addWatchlistHandler}
+                  />
+                );
+              })
+            ) : (
+              <View style={{ padding: 60 }}>
+                <Text style={GlobalStyles.text_title_sub}>
+                  No trending coins
+                </Text>
               </View>
-            );
-          }}
-          estimatedItemSize={80}
-          // onEndReached={onEndOfListHandler}
-          // onEndReachedThreshold={1}
-        />
-      </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
       {/* <View style={{ height: 100, padding: Dimens.large }}>
         <Buttons label="Sign In" />
         <Text style={[GlobalStyles.text_content_sub, styles.footerText]}>
           Sign in to gain access into details, ranking and bookmarks.
         </Text>
       </View> */}
+      {!signedIn && <SignInPrompt />}
     </View>
   );
 };
 
 export default index;
+
+const SignInPrompt = () => {
+  const { width } = useWindowDimensions();
+  return (
+    <View
+      style={{
+        width: width - Dimens.xLarge * 2,
+        backgroundColor: ColorStandard.white,
+        borderRadius: Dimens.medium,
+        borderWidth: 2,
+        borderColor: ColorScale.gray[200],
+        ...GlobalStyles.shadow,
+        padding: Dimens.large,
+        position: "absolute",
+        bottom: Dimens.medium,
+        left: Dimens.xLarge,
+      }}
+    >
+      <Buttons
+        label="Sign In with Google"
+        iconComponent={(props) => <Ionicons name="logo-google" {...props} />}
+      />
+      <Text style={[GlobalStyles.text_content_sub, styles.footerText]}>
+        Sign in to gain access into details, ranking and bookmarks.
+      </Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   footerText: {
@@ -113,5 +180,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: Dimens.small,
     // color: ColorScale.gray[600],
+  },
+  sectionHeaderText: {
+    ...GlobalStyles.text_section_header,
+    margin: Dimens.large,
   },
 });

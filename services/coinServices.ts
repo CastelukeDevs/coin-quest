@@ -43,4 +43,20 @@ const getCoinChartData = async (
   return apiCall.response;
 };
 
-export default { getCoinList, getCoinDetail, getCoinsMarket, getCoinChartData };
+const getTrendingCoins = async () => {
+  const apiCall = await APICall("TRENDING_COIN").then((res: any) => {
+    const coins = res.response.coins;
+    const remapped = coins.map((item: any) => item.item.id);
+    return remapped;
+  });
+
+  return apiCall;
+};
+
+export default {
+  getCoinList,
+  getCoinDetail,
+  getCoinsMarket,
+  getCoinChartData,
+  getTrendingCoins,
+};
