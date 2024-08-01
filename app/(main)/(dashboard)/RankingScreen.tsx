@@ -5,13 +5,23 @@ import CoinCard from "@/components/CoinCard";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { useSelector } from "react-redux";
-import { selectCoinList } from "@/redux/reducers/coinReducer";
+import {
+  addCoinToWatchList,
+  removeCoinFromWatchList,
+  selectCoinList,
+  selectCoinWatchList,
+} from "@/redux/reducers/coinReducer";
 import { ICoin, ICoinDetail, ICoinMarket } from "@/types/CoinTypes";
 import coinServices from "@/services/coinServices";
 import { router } from "expo-router";
+import CoinSwipeableCard from "@/components/CoinSwipeableCard";
+import { useAppDispatch } from "@/redux/store";
 
 const RankingScreen = () => {
   const { top } = useSafeAreaInsets();
+
+  const watchlist = useSelector(selectCoinWatchList);
+  const dispatch = useAppDispatch();
 
   const [coins, setCoins] = useState<ICoinMarket[]>([]);
   const [page, setPage] = useState(0);
@@ -33,16 +43,19 @@ const RankingScreen = () => {
     getCoinList(page + 1);
   };
 
-  const onItemPressHandler = (item: ICoinMarket) => {
-    router.navigate({
-      pathname: "/(main)/DetailsScreen",
-      params: { item: JSON.stringify(item) },
-    });
+  const addWatchlistHandler = (coinId: string) => {
+    dispatch(addCoinToWatchList({ coinId }));
+  };
+
+  const removeWatchlistHandler = (coinId: string) => {
+    dispatch(removeCoinFromWatchList({ coinId }));
   };
 
   useEffect(() => {
     getCoinList(1);
   }, []);
+
+  console.log("watchlist", watchlist);
 
   return (
     <View style={{ paddingTop: top, flex: 1 }}>
@@ -55,7 +68,11 @@ const RankingScreen = () => {
         renderItem={({ item }) => {
           return (
             <View style={{ marginHorizontal: 24, marginBottom: 8 }}>
-              <CoinCard item={item} onPress={onItemPressHandler} />
+              <CoinSwipeableCard
+                item={item}
+                onAddWatchList={addWatchlistHandler}
+                onRemoveWatchList={removeWatchlistHandler}
+              />
             </View>
           );
         }}

@@ -11,7 +11,7 @@ type IOrderBookData = {
 };
 
 type IOrderBookProps = {
-  symbol: string;
+  symbol?: string;
 };
 const OrderBook = (props: IOrderBookProps) => {
   const { subscribe, unSubscribe, socket } = useWebSocket();
@@ -25,6 +25,7 @@ const OrderBook = (props: IOrderBookProps) => {
   const arr = useMemo(() => [...Array(20).keys()], []);
 
   useEffect(() => {
+    if (props.symbol === undefined) return;
     subscribe(props.symbol);
     if (socket !== null) {
       socket.onmessage = (event) => {
@@ -44,9 +45,10 @@ const OrderBook = (props: IOrderBookProps) => {
       };
     }
     return () => {
+      if (props.symbol === undefined) return;
       unSubscribe(props.symbol);
     };
-  }, [socket, symbol]);
+  }, [socket, symbol, props.symbol]);
 
   return (
     <View>

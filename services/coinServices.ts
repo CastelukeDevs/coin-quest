@@ -15,13 +15,14 @@ const getCoinDetail = async (coinId: string) => {
   return apiCall.response;
 };
 
-const getCoinsMarket = async (page: number = 1) => {
+const getCoinsMarket = async (page: number = 1, ids?: string) => {
   const apiCall = await APICall<ICoinMarket[]>("GET_COIN_LIST", {
     params: {
       page,
       per_page: 20,
       vs_currency: "usd",
       order: "market_cap_desc",
+      ids,
     },
   }).then((res) => ({ coins: res.response, page }));
 

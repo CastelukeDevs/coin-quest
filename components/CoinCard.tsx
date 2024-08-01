@@ -7,6 +7,7 @@ import Dimens from "@/constants/Dimens";
 import { ICoin, ICoinDetail, ICoinMarket } from "@/types/CoinTypes";
 import { useWebSocket } from "@/provider/SocketProvider";
 import coinServices from "@/services/coinServices";
+import { router } from "expo-router";
 
 const CoinImage = ({ uri }: { uri?: string }) => {
   return (
@@ -17,59 +18,64 @@ const CoinImage = ({ uri }: { uri?: string }) => {
   );
 };
 
-type ICoinCardProps = {
-  item: ICoinMarket;
+export type ICoinCardProps = {
+  item: ICoinMarket | string;
   onPress?: (item: ICoinMarket) => void;
+  disable?: boolean;
+  disableOpacity?: boolean;
 };
 const CoinCard = (props: ICoinCardProps) => {
   // const url = CCURL + props.item.ImageUrl;
-  const lastItemSymbol = useRef(props.item.symbol);
+  // const lastItemSymbol = useRef(props.item.symbol);
   const { subscribe, unSubscribe } = useWebSocket();
 
-  // const [COIN, setCOIN] = useState<ICoinDetail | undefined>();
+  const [cardItem, setCardItem] = useState<ICoinMarket | undefined>(
+    typeof props.item === "string" ? undefined : props.item
+  );
 
   const price = useMemo(() => {
     return {
-      currency: Math.abs(props.item.current_price ?? 0)?.toFixed(2),
-      percent: Math.abs(props.item.price_change_percentage_24h ?? 0)?.toFixed(
-        2
-      ),
-      isMin: props.item.price_change_24h < 0,
+      currency: Math.abs(cardItem?.current_price ?? 0)?.toFixed(2),
+      percent: Math.abs(cardItem?.price_change_percentage_24h ?? 0)?.toFixed(2),
+      isMin: cardItem?.price_change_24h ?? 0 < 0,
     };
   }, [props.item]);
 
   const onItemPressHandler = () => {
-    props.onPress?.(props.item);
+    if (props.onPress) {
+      props.onPress(cardItem!);
+    } else {
+      router.navigate({
+        pathname: "/(main)/DetailsScreen",
+        params: { id: cardItem?.id },
+      });
+    }
   };
 
   useEffect(() => {
-    // console.log("[O] loaded", props.item.FullName);
-    // return () => {
-    //   console.log("[X] unload", props.item.FullName);
-    // };
-    // subscribe(props.item.symbol);
-    // if (lastItemSymbol.current !== props.item.symbol) {
-    //   console.log(
-    //     `item ${lastItemSymbol.current} rerendered into ${props.item.symbol}`
-    //   );
-    //   unSubscribe(lastItemSymbol.current);
-    //   lastItemSymbol.current = props.item.symbol;
-    // }
-    // coinServices.getCoinDetail(props.item.id).then(setCOIN);
-  }, [props.item]);
+    if (typeof props.item === "string") {
+      coinServices
+        .getCoinsMarket(1, props.item)
+        .then((res) => setCardItem(res.coins[0]));
+    } else {
+      setCardItem(props.item);
+    }
+  }, [props]);
 
   return (
     <TouchableOpacity
       style={styles.componentBaseContainer}
       onPress={onItemPressHandler}
+      disabled={props.disable}
+      activeOpacity={props.disableOpacity ? 1 : 0.2}
     >
-      <CoinImage uri={props.item.image} />
+      <CoinImage uri={cardItem?.image} />
 
       <View style={{ justifyContent: "center", gap: 4, flex: 1 }}>
         <Text style={GlobalStyles.text_title} numberOfLines={1}>
-          {props.item.name}
+          {cardItem?.name}
         </Text>
-        <Text style={GlobalStyles.text_title_sub}>{props.item.symbol}</Text>
+        <Text style={GlobalStyles.text_title_sub}>{cardItem?.symbol}</Text>
       </View>
 
       <View

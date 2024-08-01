@@ -32,11 +32,9 @@ import OrderBook from "@/components/OrderBook";
 
 const DetailsScreen = () => {
   const { bottom } = useSafeAreaInsets();
-  const { item } = useLocalSearchParams();
-  const CoinData: ICoinMarket = JSON.parse(item as string);
+  const { id } = useLocalSearchParams();
 
-  console.log("Current Coin DATA", CoinData);
-
+  const [Coin, setCoin] = useState<ICoinMarket | undefined>();
   const [OHLCData, setOHLCData] = useState<number[][]>([]);
   const [duration, setDuration] = useState(1);
 
@@ -55,16 +53,22 @@ const DetailsScreen = () => {
   );
 
   useEffect(() => {
-    coinServices
-      .getCoinChartData(CoinData.id, "ohlc", duration)
-      .then(setOHLCData);
+    if (Coin === undefined) {
+      coinServices.getCoinsMarket(1, id as string).then((res) => {
+        setCoin(res.coins[0]);
+      });
+    } else {
+      coinServices
+        .getCoinChartData(Coin.id, "ohlc", duration)
+        .then(setOHLCData);
+    }
 
     return () => {};
-  }, [duration]);
+  }, [duration, Coin]);
 
   return (
     <>
-      <ScreenHeader title={CoinData.name} />
+      <ScreenHeader title={Coin?.name} />
       <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}>
         <Text style={GlobalStyles.text_title}>Market</Text>
         <Text style={GlobalStyles.text_title_sub}>Information</Text>
@@ -84,7 +88,7 @@ const DetailsScreen = () => {
           }}
         >
           <Text style={GlobalStyles.text_section_header}>Order Book</Text>
-          <OrderBook symbol={CoinData.symbol} />
+          <OrderBook symbol={Coin?.symbol} />
         </View>
       </ScrollView>
     </>

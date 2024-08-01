@@ -50,7 +50,7 @@ const CandleSticks = ({ data }: { data: TCandle[] }) => {
   return (
     <View style={{ borderWidth: 0, padding: 28 }}>
       <CandlestickChart.Provider data={data}>
-        <CandlestickChart width={width - 28 * 2} height={width}>
+        <CandlestickChart width={width - 28 * 2} height={width * 0.8}>
           <CandlestickChart.Candles
             positiveColor={ColorScale.green[400]}
             negativeColor={ColorScale.red[400]}
