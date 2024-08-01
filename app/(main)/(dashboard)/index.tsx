@@ -8,9 +8,6 @@ import Buttons from "@/components/commons/Buttons";
 import GlobalStyles from "@/constants/GlobalStyles";
 
 const index = () => {
-  const test = process.env.EXPO_PUBLIC_CRYPTO_COMPARE_API_KEY;
-  console.log("test env", test);
-
   const { top } = useSafeAreaInsets();
   return (
     <View

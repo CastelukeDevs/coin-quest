@@ -1,4 +1,4 @@
-import { CCWSURL } from "@/constants/String";
+import { CAIURL, CCWSURL } from "@/constants/String";
 import {
   createContext,
   PropsWithChildren,
@@ -45,13 +45,16 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
 
   const init = useCallback(() => {
     const ws: WebSocket = new WebSocket(
-      CCWSURL + `?api_key=${process.env.EXPO_PUBLIC_CRYPTO_COMPARE_API_KEY}`
+      CAIURL + `?apikey=${process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY}`
     );
 
-    ws.onopen = () => console.log("WebSocket connected");
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      sendHello();
+    };
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Message received:", data, data.MESSAGE, data.PARAMETER);
+      // console.log("Socket Provider message:", data, data.type);
     };
     ws.onerror = (error) => console.log("WebSocket error:", error);
     ws.onclose = () => console.log("WebSocket disconnected");
@@ -70,30 +73,33 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  const subscribe = (target: string) => {
-    console.log("subscribing ", target, getSubs(target));
-
-    setSubscribed((prev) => [...prev, target]);
-    const subRequest = {
-      action: "SubAdd",
-      subs: [getSubs(target)],
+  const sendHello = () => {
+    const message = {
+      type: "hello",
+      heartbeat: false,
+      subscribe_data_type: ["trade"],
     };
+    socket?.send(JSON.stringify(message));
+  };
 
-    if (socket && socket.readyState === 1) {
-      socket?.send(JSON.stringify(subRequest));
-    }
+  const subscribe = (target: string) => {
+    const message = {
+      type: "subscribe",
+      heartbeat: true,
+      subscribe_data_type: ["book"],
+      subscribe_filter_asset_id: [target],
+    };
+    socket?.send(JSON.stringify(message));
   };
 
   const unSubscribe = (target: string) => {
-    console.log("unsubscribe ", target, getSubs(target));
-    setSubscribed((prev) => [...prev.filter((s) => s !== target)]);
-    const subRequest = {
-      action: "SubRemove",
-      subs: [getSubs(target)],
+    const message = {
+      type: "unsubscribe",
+      heartbeat: true,
+      subscribe_data_type: ["book"],
+      subscribe_filter_asset_id: [target],
     };
-    if (socket && socket.readyState === 1) {
-      socket?.send(JSON.stringify(subRequest));
-    }
+    socket?.send(JSON.stringify(message));
   };
 
   return (
