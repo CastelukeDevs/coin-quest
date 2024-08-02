@@ -48,7 +48,7 @@ const OrderBook = (props: IOrderBookProps) => {
       if (props.symbol === undefined) return;
       unSubscribe(props.symbol);
     };
-  }, [socket, symbol, props.symbol, subscribe, unSubscribe]);
+  }, [socket, symbol, props.symbol]);
 
   return (
     <View>
