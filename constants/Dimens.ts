@@ -1,0 +1,15 @@
+export default {
+  xLarge: 28,
+  large: 18,
+  medium: 12,
+  small: 8,
+  xSmall: 4,
+  font_content_sub: 12,
+  font_content: 14,
+  font_title_sub: 16,
+  font_title: 18,
+  font_h3: 20,
+  font_h2: 22,
+  font_h1: 24,
+  font_display: 32,
+} as const;
