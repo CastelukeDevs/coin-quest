@@ -29,15 +29,16 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
     process.env.COIN_API_IO_API_KEY ??
     process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY;
 
-  const sendHello = useCallback(() => {
+  const sendHello = () => {
     const message = {
       type: "hello",
       heartbeat: false,
       subscribe_data_type: ["trade"],
     };
     socket?.send(JSON.stringify(message));
-  }, [socket]);
-  const init = useCallback(() => {
+  };
+
+  const init = () => {
     const ws: WebSocket = new WebSocket(CAIURL + `?apikey=${apiKey}`);
 
     ws.onopen = () => {
@@ -49,7 +50,7 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
     ws.onclose = () => console.log("WebSocket disconnected");
 
     setSocket(ws);
-  }, []);
+  };
 
   useEffect(() => {
     if (socket === null) {
