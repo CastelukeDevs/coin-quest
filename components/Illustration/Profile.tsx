@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import React from "react";
 import { Path, Svg } from "react-native-svg";
 import { ColorScale } from "@/constants/Colors";

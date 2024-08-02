@@ -8,7 +8,7 @@ import Analyze from "@/components/Illustration/Analyze";
 import Dimens from "@/constants/Dimens";
 import Buttons from "@/components/commons/Buttons";
 
-const index = () => {
+const Index = () => {
   const { top, bottom } = useSafeAreaInsets();
   const navigateToHome = () => {
     router.replace("(main)/(dashboard)/HomeScreen");
@@ -40,6 +40,4 @@ const index = () => {
   );
 };
 
-export default index;
-
-const styles = StyleSheet.create({});
+export default Index;

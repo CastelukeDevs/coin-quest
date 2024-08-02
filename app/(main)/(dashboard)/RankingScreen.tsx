@@ -1,12 +1,10 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
-import { useSelector } from "react-redux";
 import {
   addCoinToWatchList,
   removeCoinFromWatchList,
-  selectCoinWatchList,
 } from "@/redux/reducers/coinReducer";
 import { ICoinMarket } from "@/types/CoinTypes";
 import coinServices from "@/services/coinServices";
@@ -19,14 +17,10 @@ import { ColorScale } from "@/constants/Colors";
 const RankingScreen = () => {
   const { top } = useSafeAreaInsets();
 
-  const watchlist = useSelector(selectCoinWatchList);
   const dispatch = useAppDispatch();
 
   const [coins, setCoins] = useState<ICoinMarket[]>([]);
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState("");
-  const [searchedCoins, setSearchedCoins] = useState<ICoinMarket[]>([]);
-  const [searchPage, setSearchPage] = useState(0);
 
   const getCoinList = (targetPage?: number) => {
     const pageToFetch = targetPage ?? page + 1;
@@ -57,7 +51,7 @@ const RankingScreen = () => {
   return (
     <View style={{ paddingTop: top, flex: 1 }}>
       <FlashList
-        data={search.length < 1 ? coins : searchedCoins}
+        data={coins}
         keyExtractor={(_, i) => i.toString()}
         renderItem={({ item }) => {
           return (
@@ -90,5 +84,3 @@ const RankingScreen = () => {
 };
 
 export default RankingScreen;
-
-const styles = StyleSheet.create({});

@@ -1,4 +1,4 @@
-import { CAIURL, CCWSURL } from "@/constants/String";
+import { CAIURL } from "@/constants/String";
 import {
   createContext,
   PropsWithChildren,
@@ -22,27 +22,17 @@ const WebSocketContext = createContext<ISocketContext>({
   init: () => {},
 });
 
-const typelist = {
-  Trade: { channel: "Trade", type: 0 },
-  Ticker: { channel: "Ticker", type: 2 },
-  CCCAGG: { channel: "CCCAGG", type: 5 },
-};
-const exchange = "CCCAGG";
-
-type IChannel = keyof typeof typelist;
-
 export const WebSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [subscribed, setSubscribed] = useState<string[]>([]);
-  const [quote, setQuote] = useState<"USD" | "IDR">("USD");
-  const [type, setType] = useState<IChannel>("CCCAGG");
 
-  const getSubs = (str: string) => {
-    const string = `${typelist[type].type}~${exchange}~${str}~${quote}`;
-
-    return string;
-  };
-
+  const sendHello = useCallback(() => {
+    const message = {
+      type: "hello",
+      heartbeat: false,
+      subscribe_data_type: ["trade"],
+    };
+    socket?.send(JSON.stringify(message));
+  }, [socket]);
   const init = useCallback(() => {
     const ws: WebSocket = new WebSocket(
       CAIURL +
@@ -56,10 +46,7 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
       console.log("WebSocket connected");
       sendHello();
     };
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      // console.log("Socket Provider message:", data, data.type);
-    };
+    ws.onmessage = (event) => {};
     ws.onerror = (error) => console.log("WebSocket error:", error);
     ws.onclose = () => console.log("WebSocket disconnected");
 
@@ -76,15 +63,6 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
       setSocket(null);
     };
   }, []);
-
-  const sendHello = () => {
-    const message = {
-      type: "hello",
-      heartbeat: false,
-      subscribe_data_type: ["trade"],
-    };
-    socket?.send(JSON.stringify(message));
-  };
 
   const subscribe = (target: string) => {
     const message = {

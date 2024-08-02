@@ -6,8 +6,10 @@ import store from "../store";
 /**
  * Wrapper for redux
  */
-export default ({ children }: { children: ReactNode[] | ReactNode }) => (
+const ReduxWrapper = ({ children }: { children: ReactNode[] | ReactNode }) => (
   <Provider store={store.stores}>
     <PersistGate persistor={store.persistor}>{children}</PersistGate>
   </Provider>
 );
+
+export default ReduxWrapper;

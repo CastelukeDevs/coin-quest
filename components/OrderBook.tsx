@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useWebSocket } from "@/provider/SocketProvider";
 import GlobalStyles from "@/constants/GlobalStyles";
@@ -48,7 +48,7 @@ const OrderBook = (props: IOrderBookProps) => {
       if (props.symbol === undefined) return;
       unSubscribe(props.symbol);
     };
-  }, [socket, symbol, props.symbol]);
+  }, [socket, symbol, props.symbol, subscribe, unSubscribe]);
 
   return (
     <View>
@@ -151,5 +151,3 @@ const OrderBookItem = (props: IOrderBookItemProps) => {
 };
 
 export default OrderBook;
-
-const styles = StyleSheet.create({});
