@@ -1,34 +1,15 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ICoinMarket, IMarketData } from "@/types/CoinTypes";
+import { ICoinMarket } from "@/types/CoinTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import coinServices from "@/services/coinServices";
-import {
-  CandlestickChart,
-  TCandle,
-  TData,
-  useCandleData,
-} from "react-native-wagmi-charts";
-import { ColorScale, ColorStandard } from "@/constants/Colors";
-import currencyFormatter, {
-  currencyFormatterWorklet,
-} from "@/utilities/currencyFormatter";
+import { TCandle } from "react-native-wagmi-charts";
+import { ColorStandard } from "@/constants/Colors";
 import CandleSticks from "@/components/Chart/CandleSticks";
-import Buttons from "@/components/commons/Buttons";
 import DurationSelector from "@/components/DurationSelector";
 import CoinCard from "@/components/CoinCard";
-import { useWebSocket } from "@/provider/SocketProvider";
 import ScreenHeader from "@/components/ScreenHeader";
-import GlobalStyles from "@/constants/GlobalStyles";
 import Dimens from "@/constants/Dimens";
 import OrderBook from "@/components/OrderBook";
 import PageSelector, { ISelectorItem } from "@/components/PageSelector";

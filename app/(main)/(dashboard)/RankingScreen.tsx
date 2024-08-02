@@ -1,22 +1,20 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import APICall from "@/services/APIs/APICall";
-import CoinCard from "@/components/CoinCard";
+import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { useSelector } from "react-redux";
 import {
   addCoinToWatchList,
   removeCoinFromWatchList,
-  selectCoinList,
   selectCoinWatchList,
 } from "@/redux/reducers/coinReducer";
-import { ICoin, ICoinDetail, ICoinMarket } from "@/types/CoinTypes";
+import { ICoinMarket } from "@/types/CoinTypes";
 import coinServices from "@/services/coinServices";
-import { router } from "expo-router";
 import CoinSwipeableCard from "@/components/CoinSwipeableCard";
 import { useAppDispatch } from "@/redux/store";
 import Dimens from "@/constants/Dimens";
+import Coins from "@/components/Illustration/Coins";
+import { ColorScale } from "@/constants/Colors";
 
 const RankingScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -58,9 +56,6 @@ const RankingScreen = () => {
 
   return (
     <View style={{ paddingTop: top, flex: 1 }}>
-      {/* <View style={{ borderWidth: 1 }}>
-        <TextInput value={search} onChangeText={setSearch} />
-      </View> */}
       <FlashList
         data={search.length < 1 ? coins : searchedCoins}
         keyExtractor={(_, i) => i.toString()}
@@ -79,6 +74,16 @@ const RankingScreen = () => {
         estimatedItemSize={80}
         onEndReached={onEndOfListHandler}
         onEndReachedThreshold={0.8}
+      />
+      <Coins
+        style={{
+          position: "absolute",
+          zIndex: -1,
+          bottom: 30,
+          left: 30,
+          height: 300,
+        }}
+        color={ColorScale.gray[400]}
       />
     </View>
   );
