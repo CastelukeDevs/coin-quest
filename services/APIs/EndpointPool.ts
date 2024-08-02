@@ -1,7 +1,6 @@
 import { IEndpointPool } from "./APIUtils";
 
-const apikey =
-  process.env.COIN_GECKO_API_KEY ?? process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY;
+const apikey = process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY;
 
 const cgUrl = "https://api.coingecko.com/api/v3";
 const marketUrl = cgUrl + "/coins/market";

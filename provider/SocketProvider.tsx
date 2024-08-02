@@ -25,9 +25,7 @@ const WebSocketContext = createContext<ISocketContext>({
 export const WebSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
-  const apiKey =
-    process.env.COIN_API_IO_API_KEY ??
-    process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY;
+  const apiKey = process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY;
 
   const sendHello = () => {
     const message = {
