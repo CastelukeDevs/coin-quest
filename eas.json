@@ -14,21 +14,27 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "PACKAGE_NAME": "com.casteluke.coinquest.devclient"
+        "PACKAGE_NAME": "com.casteluke.coinquest.devclient",
+        "COIN_GECKO_API_KEY": "CG-Ut8yURPatiWqts1WvmJMYNGP",
+        "COIN_API_IO_API_KEY": "65AF5D09-E942-4CDD-80C7-367B23A35E70"
       }
     },
     "development": {
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "PACKAGE_NAME": "com.casteluke.coinquest.dev"
+        "PACKAGE_NAME": "com.casteluke.coinquest.dev",
+        "COIN_GECKO_API_KEY": "CG-Ut8yURPatiWqts1WvmJMYNGP",
+        "COIN_API_IO_API_KEY": "65AF5D09-E942-4CDD-80C7-367B23A35E70"
       }
     },
     "release": {
       "extends": "iosbuildsetting",
       "channel": "release",
       "env": {
-        "PACKAGE_NAME": "com.casteluke.coinquest"
+        "PACKAGE_NAME": "com.casteluke.coinquest",
+        "COIN_GECKO_API_KEY": "CG-Ut8yURPatiWqts1WvmJMYNGP",
+        "COIN_API_IO_API_KEY": "65AF5D09-E942-4CDD-80C7-367B23A35E70"
       }
     }
   },

@@ -25,6 +25,10 @@ const WebSocketContext = createContext<ISocketContext>({
 export const WebSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
+  const apiKey =
+    process.env.COIN_API_IO_API_KEY ??
+    process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY;
+
   const sendHello = useCallback(() => {
     const message = {
       type: "hello",
@@ -34,13 +38,7 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
     socket?.send(JSON.stringify(message));
   }, [socket]);
   const init = useCallback(() => {
-    const ws: WebSocket = new WebSocket(
-      CAIURL +
-        `?apikey=${
-          process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY ??
-          process.env.COIN_API_IO_API_KEY
-        }`
-    );
+    const ws: WebSocket = new WebSocket(CAIURL + `?apikey=${apiKey}`);
 
     ws.onopen = () => {
       console.log("WebSocket connected");
