@@ -1,5 +1,8 @@
 import { IEndpointPool } from "./APIUtils";
 
+const apikey =
+  process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY ?? process.env.COIN_GECKO_API_KEY;
+
 const cgUrl = "https://api.coingecko.com/api/v3";
 const marketUrl = cgUrl + "/coins/market";
 const coinList = cgUrl + "/coins/markets";
@@ -18,7 +21,7 @@ const EndpointPool = [
     url: marketUrl,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
   {
@@ -26,7 +29,7 @@ const EndpointPool = [
     url: coinList,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
   {
@@ -34,7 +37,7 @@ const EndpointPool = [
     url: coinById,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
   {
@@ -42,7 +45,7 @@ const EndpointPool = [
     url: searchUrl,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
   {
@@ -50,7 +53,7 @@ const EndpointPool = [
     url: coinMarketChartUrl,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
   {
@@ -58,7 +61,7 @@ const EndpointPool = [
     url: trendingCoinUrl,
     method: "get",
     header: {
-      "x-cg-demo-api-key": process.env.EXPO_PUBLIC_COIN_GECKO_API_KEY,
+      "x-cg-demo-api-key": apikey,
     },
   },
 ] as const satisfies IEndpointPool[];

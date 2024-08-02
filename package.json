@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "fresh": "watchman watch-del .;watchman watch-project .;expo start -c"
+    "fresh": "watchman watch-del .;watchman watch-project .;expo start -c",
+    "update:dev": "PACKAGE_NAME='com.casteluke.coinquest.dev' npx eas update --branch=development --clear-cache",
+    "update:release": "PACKAGE_NAME='com.casteluke.coinquest' npx eas update --branch=release --clear-cache"
   },
   "jest": {
     "preset": "jest-expo"

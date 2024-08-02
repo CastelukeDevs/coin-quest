@@ -33,6 +33,7 @@ import {
   selectSignInStatus,
   signInUser,
 } from "@/redux/reducers/defaultReducer";
+import Coins from "@/components/Illustration/Coins";
 
 const { width } = Dimensions.get("window");
 const HomeScreen = () => {
@@ -80,14 +81,27 @@ const HomeScreen = () => {
           backgroundColor: ColorStandard.white,
           ...GlobalStyles.shadow,
           shadowColor: "black",
+          flexDirection: "row",
+          // overflow: "hidden",
         }}
       >
         <Branding />
+        <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]}>
+          <Coins
+            style={{
+              height: 180,
+              aspectRatio: 1,
+              position: "absolute",
+              zIndex: 10,
+              right: 20,
+              bottom: -40,
+            }}
+          />
+        </View>
       </View>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          // paddingTop: 120,
           paddingBottom: Dimens.large,
         }}
       >

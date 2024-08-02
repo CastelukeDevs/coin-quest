@@ -12,6 +12,7 @@ import {
   signOutUser,
 } from "@/redux/reducers/defaultReducer";
 import { useSelector } from "react-redux";
+import Profile from "@/components/Illustration/Profile";
 
 const ProfileScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -30,6 +31,7 @@ const ProfileScreen = () => {
       style={{
         paddingTop: top + Dimens.medium,
         paddingHorizontal: Dimens.medium,
+        flex: 1,
       }}
     >
       <Buttons
@@ -50,6 +52,11 @@ const ProfileScreen = () => {
             : {}
         }
         onPress={authenticate}
+      />
+
+      <Profile
+        style={{ height: 200, position: "absolute", bottom: 20, left: 20 }}
+        color={ColorScale.gray[500]}
       />
     </View>
   );

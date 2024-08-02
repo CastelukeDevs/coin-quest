@@ -45,7 +45,11 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
 
   const init = useCallback(() => {
     const ws: WebSocket = new WebSocket(
-      CAIURL + `?apikey=${process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY}`
+      CAIURL +
+        `?apikey=${
+          process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY ??
+          process.env.COIN_API_IO_API_KEY
+        }`
     );
 
     ws.onopen = () => {

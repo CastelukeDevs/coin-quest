@@ -1,10 +1,10 @@
 require("dotenv").config();
 
-const PACKAGES = process.env.PACKAGE_NAME;
+const PACKAGES = process.env.PACKAGE_NAME ?? "com.casteluke.coinquest";
 
 export default {
   expo: {
-    name: "coin-quest",
+    name: "Coin Quest",
     slug: "coin-quest",
     version: "1.0.0",
     orientation: "portrait",
