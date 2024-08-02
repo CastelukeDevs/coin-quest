@@ -1,6 +1,5 @@
 import { ICoin } from "@/types/CoinTypes";
 import createSliceWithThunks from "../utilities/createSliceWithThunks";
-import APICall from "@/services/APIs/APICall";
 import coinServices from "@/services/coinServices";
 import { PayloadAction } from "@reduxjs/toolkit";
 

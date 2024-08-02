@@ -1,4 +1,4 @@
-type ICoinsSearchResult = {
+export type ICoinsSearchResult = {
   id: string;
   name: string;
   api_symbol: string;
@@ -8,7 +8,7 @@ type ICoinsSearchResult = {
   large: string;
 };
 
-type IExchangesSearchResult = {
+export type IExchangesSearchResult = {
   id: string;
   name: string;
   market_type: string;
@@ -16,19 +16,19 @@ type IExchangesSearchResult = {
   large: string;
 };
 
-type ICategoriesSearchResult = {
+export type ICategoriesSearchResult = {
   id: number;
   name: string;
 };
 
-type INFTSearchResult = {
+export type INFTSearchResult = {
   id: string;
   name: string;
   symbol: string;
   thumb: string;
 };
 
-type ISearchResult = {
+export type ISearchResult = {
   coins: ICoinsSearchResult[];
   exchanges: IExchangesSearchResult[];
   icos: any[];

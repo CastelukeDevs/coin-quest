@@ -11,7 +11,6 @@ import {
   IEndpointPool,
   IAPIsReturn,
 } from "./APIUtils";
-import { Platform } from "react-native";
 import { retrieveToken } from "../tokenManager";
 
 /**
@@ -69,9 +68,6 @@ const APICall = async <T, X = never>(
     ? removeEmptyElement(options?.data)
     : undefined;
 
-  const headerAuthorization = selectEndpoint.auth
-    ? { Authorization: `Bearer ${token}` }
-    : undefined;
   const headerContentType = isFormDataExpected
     ? { "Content-Type": "multipart/form-data" }
     : undefined;

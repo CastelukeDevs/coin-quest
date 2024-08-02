@@ -1,20 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import { Stack } from "expo-router";
-import { useAppDispatch } from "@/redux/store";
-import {
-  getAllCoin,
-  resetCoinList,
-  selectCoinListIsEmpty,
-} from "@/redux/reducers/coinReducer";
-import { useSelector } from "react-redux";
-import { CCWSURL } from "@/constants/String";
 import { useWebSocket } from "@/provider/SocketProvider";
 
 const MainLayout = () => {
-  const dispatch = useAppDispatch();
-  const coinListEmpty = useSelector(selectCoinListIsEmpty);
-  const { socket, subscribe, init } = useWebSocket();
+  const { init } = useWebSocket();
 
   useEffect(() => {
     return () => {};

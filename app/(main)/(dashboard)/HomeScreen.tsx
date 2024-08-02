@@ -1,23 +1,12 @@
-import {
-  Animated,
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ColorScale, ColorStandard } from "@/constants/Colors";
 import Branding from "@/components/commons/Branding";
 import Dimens from "@/constants/Dimens";
 import Buttons from "@/components/commons/Buttons";
 import GlobalStyles from "@/constants/GlobalStyles";
-import CoinCard, { ICoinCardProps } from "@/components/CoinCard";
 import { ICoinMarket } from "@/types/CoinTypes";
-import { Swipeable } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import CoinSwipeableCard from "@/components/CoinSwipeableCard";
 import { useSelector } from "react-redux";
@@ -26,7 +15,6 @@ import {
   removeCoinFromWatchList,
   selectCoinWatchList,
 } from "@/redux/reducers/coinReducer";
-import { FlashList } from "@shopify/flash-list";
 import { useAppDispatch } from "@/redux/store";
 import coinServices from "@/services/coinServices";
 import {
@@ -34,6 +22,7 @@ import {
   signInUser,
 } from "@/redux/reducers/defaultReducer";
 import Coins from "@/components/Illustration/Coins";
+import Strategy from "@/components/Illustration/Strategy";
 
 const { width } = Dimensions.get("window");
 const HomeScreen = () => {
@@ -139,14 +128,28 @@ const HomeScreen = () => {
               })
             ) : (
               <View style={{ padding: 60 }}>
-                <Text style={GlobalStyles.text_title_sub}>
-                  No trending coins
+                <Text
+                  style={[
+                    { ...GlobalStyles.text_title_sub, textAlign: "center" },
+                  ]}
+                >
+                  Loading trending coins ...
                 </Text>
               </View>
             )}
           </View>
         </View>
       </ScrollView>
+      <Strategy
+        style={{
+          position: "absolute",
+          zIndex: -1,
+          bottom: 30,
+          left: 30,
+          height: 300,
+        }}
+        color={ColorScale.gray[400]}
+      />
       {!signedIn && <SignInPrompt />}
     </View>
   );

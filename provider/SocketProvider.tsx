@@ -1,4 +1,4 @@
-import { CAIURL, CCWSURL } from "@/constants/String";
+import { CAIURL } from "@/constants/String";
 import {
   createContext,
   PropsWithChildren,
@@ -22,49 +22,33 @@ const WebSocketContext = createContext<ISocketContext>({
   init: () => {},
 });
 
-const typelist = {
-  Trade: { channel: "Trade", type: 0 },
-  Ticker: { channel: "Ticker", type: 2 },
-  CCCAGG: { channel: "CCCAGG", type: 5 },
-};
-const exchange = "CCCAGG";
-
-type IChannel = keyof typeof typelist;
-
 export const WebSocketProvider = ({ children }: PropsWithChildren) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [subscribed, setSubscribed] = useState<string[]>([]);
-  const [quote, setQuote] = useState<"USD" | "IDR">("USD");
-  const [type, setType] = useState<IChannel>("CCCAGG");
 
-  const getSubs = (str: string) => {
-    const string = `${typelist[type].type}~${exchange}~${str}~${quote}`;
+  const apiKey = process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY;
 
-    return string;
+  const sendHello = () => {
+    const message = {
+      type: "hello",
+      heartbeat: false,
+      subscribe_data_type: ["trade"],
+    };
+    socket?.send(JSON.stringify(message));
   };
 
-  const init = useCallback(() => {
-    const ws: WebSocket = new WebSocket(
-      CAIURL +
-        `?apikey=${
-          process.env.EXPO_PUBLIC_COIN_API_IO_API_KEY ??
-          process.env.COIN_API_IO_API_KEY
-        }`
-    );
+  const init = () => {
+    const ws: WebSocket = new WebSocket(CAIURL + `?apikey=${apiKey}`);
 
     ws.onopen = () => {
       console.log("WebSocket connected");
       sendHello();
     };
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      // console.log("Socket Provider message:", data, data.type);
-    };
+    ws.onmessage = (event) => {};
     ws.onerror = (error) => console.log("WebSocket error:", error);
     ws.onclose = () => console.log("WebSocket disconnected");
 
     setSocket(ws);
-  }, []);
+  };
 
   useEffect(() => {
     if (socket === null) {
@@ -76,15 +60,6 @@ export const WebSocketProvider = ({ children }: PropsWithChildren) => {
       setSocket(null);
     };
   }, []);
-
-  const sendHello = () => {
-    const message = {
-      type: "hello",
-      heartbeat: false,
-      subscribe_data_type: ["trade"],
-    };
-    socket?.send(JSON.stringify(message));
-  };
 
   const subscribe = (target: string) => {
     const message = {

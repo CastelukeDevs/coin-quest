@@ -1,3 +1,4 @@
+import { toast } from "@backpackapp-io/react-native-toast";
 import createSliceWithThunks from "../utilities/createSliceWithThunks";
 
 export type IDefaultState = {
@@ -18,10 +19,12 @@ const defaultReducer = createSliceWithThunks({
   reducers: (create) => ({
     signInUser: create.reducer((state, action) => {
       state.isSignedIn = true;
+      toast.success("Signed In Successfully.");
     }),
 
     signOutUser: create.reducer((state, action) => {
       state.isSignedIn = false;
+      toast.success("Signed Out Successfully");
     }),
   }),
 });

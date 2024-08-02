@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useWebSocket } from "@/provider/SocketProvider";
 import GlobalStyles from "@/constants/GlobalStyles";
@@ -151,5 +151,3 @@ const OrderBookItem = (props: IOrderBookItemProps) => {
 };
 
 export default OrderBook;
-
-const styles = StyleSheet.create({});

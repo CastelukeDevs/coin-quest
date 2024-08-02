@@ -11,7 +11,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "fresh": "watchman watch-del .;watchman watch-project .;expo start -c",
-    "update:dev": "PACKAGE_NAME='com.casteluke.coinquest.dev' npx eas update --branch=development --clear-cache",
+    "update:dev": "COIN_API_IO_API_KEY='65AF5D09-E942-4CDD-80C7-367B23A35E70' COIN_GECKO_API_KEY='CG-Ut8yURPatiWqts1WvmJMYNGP' PACKAGE_NAME='com.casteluke.coinquest.dev' npx eas update --branch=development --clear-cache",
     "update:release": "PACKAGE_NAME='com.casteluke.coinquest' npx eas update --branch=release --clear-cache"
   },
   "jest": {
@@ -59,6 +59,8 @@
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.0.7",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.0.0",
     "jest": "^29.2.1",
     "jest-expo": "~51.0.3",
     "react-test-renderer": "18.2.0",

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ColorStandard } from "@/constants/Colors";
@@ -8,7 +8,7 @@ import Analyze from "@/components/Illustration/Analyze";
 import Dimens from "@/constants/Dimens";
 import Buttons from "@/components/commons/Buttons";
 
-const index = () => {
+const Index = () => {
   const { top, bottom } = useSafeAreaInsets();
   const navigateToHome = () => {
     router.replace("(main)/(dashboard)/HomeScreen");
@@ -40,6 +40,4 @@ const index = () => {
   );
 };
 
-export default index;
-
-const styles = StyleSheet.create({});
+export default Index;

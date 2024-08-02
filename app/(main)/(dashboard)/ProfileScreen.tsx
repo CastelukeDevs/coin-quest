@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Dimens from "@/constants/Dimens";
@@ -55,7 +55,7 @@ const ProfileScreen = () => {
       />
 
       <Profile
-        style={{ height: 200, position: "absolute", bottom: 20, left: 20 }}
+        style={{ height: 300, position: "absolute", bottom: 20, left: 20 }}
         color={ColorScale.gray[500]}
       />
     </View>
